@@ -12,8 +12,8 @@ import fr.afpajulien.webappdemo.configuration.CustomProperties;
 import fr.afpajulien.webappdemo.model.Person;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Component
+@Slf4j
 public class PersonRepository {
 
     @Autowired
@@ -62,8 +62,7 @@ public class PersonRepository {
                 request,
                 Person.class);
 
-        log.debug("Create Person call " + response.getStatusCode().toString());
-
+        log.debug("Create Person called. Status: " + response.getStatusCode().toString());
         return response.getBody();
     }
 

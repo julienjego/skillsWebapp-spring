@@ -50,8 +50,7 @@ public class PersonController {
 
     @PostMapping("/savePerson")
     public ModelAndView savePerson(@ModelAttribute Person person) {
-        ps.addPerson(person);
-        System.out.println(person);
+        ps.savePerson(person);
         return new ModelAndView("redirect:/");
     }
 }

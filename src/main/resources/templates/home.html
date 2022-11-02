@@ -3,72 +3,147 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+            crossorigin="anonymous"
+        />
         <title>Person webapp</title>
     </head>
     <body>
-        <h1>Liste des personnes</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Prénom</th>
-                    <th>Nom</th>
-                    <th>Compétences</th>
-                    <tbody>
-                        <tr th:if="${persons.empty}">
-                            <td colspan="3">
-                                Auncune personne en base de données
-                            </td>
+        <div class="container">
+            <div class="row">
+                <h1>Liste des personnes</h1>
+            </div>
+            <div class="row mt-4">
+                <table class="table">
+                    <caption class="invisible">
+                        Liste des personnes
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>Prénom</th>
+                            <th>Nom</th>
+                            <th>Naissance</th>
+                            <th>Compétences</th>
+                            <th></th>
+                            <tbody>
+                                <tr th:if="${persons.empty}">
+                                    <td colspan="3">
+                                        Auncune personne en base de données
+                                    </td>
+                                </tr>
+                                <tr th:each="person: ${persons}">
+                                    <td>
+                                        <span th:text="${person.firstName}"
+                                            >Prénom</span
+                                        >
+                                    </td>
+                                    <td>
+                                        <span th:text="${person.lastName}"
+                                            >Nom</span
+                                        >
+                                    </td>
+                                    <td>
+                                        <span
+                                            th:text="${#dates.format(person.birthDate, 'dd-MM-yyyy')}"
+                                            >Date de naissance</span
+                                        >
+                                    </td>
+                                    <td>
+                                        <span
+                                            th:each="skill, i:${person.skills}"
+                                            th:text="${person.skills[__${i.index}__].skillName} + (${i.size-1 > i.index}? ', ':'') "
+                                            >Compétences</span
+                                        >
+                                    </td>
+                                    <td>
+                                        <a
+                                            class="btn btn-danger"
+                                            th:href="@{/deletePerson/{id}(id=${person.id})}"
+                                            >Supprimer</a
+                                        >
+                                    </td>
+                                </tr>
+                            </tbody>
                         </tr>
-                        <tr th:each="person: ${persons}">
-                            <td>
-                                <span th:text="${person.firstName}"
-                                    >Prénom</span
-                                >
-                            </td>
-                            <td>
-                                <span th:text="${person.lastName}">Nom</span>
-                            </td>
-                            <td>
-                                <span
-                                    th:each="skill, i:${person.skills}"
-                                    th:text="${person.skills[__${i.index}__].skillName} + (${i.size-1 > i.index}? ', ':'') "
-                                    >Compétences</span
-                                >
-                            </td>
-                            <td>
-                                <a
-                                    th:href="@{/deletePerson/{id}(id=${person.id})}"
-                                    >Supprimer</a
-                                >
-                            </td>
-                        </tr>
-                    </tbody>
-                </tr>
-            </thead>
-        </table>
+                    </thead>
+                </table>
+            </div>
 
-        <form method="post" th:action="@{/savePerson}" th:object="${person}">
-            <input
-                type="text"
-                th:field="*{firstName}"
-                placeholder="Entrez un prénom"
-            />
-            <input
-                type="text"
-                th:field="*{lastName}"
-                placeholder="Entrez un nom"
-            />
-            <input
-                type="text"
-                th:field="*{birthDate}"
-                placeholder="Entrez une date de naissance AAAA-MM-JJ"
-            />
-            <input
-                type="text"
-                th:field="*{skills}"
-                placeholder="Entrez des compétences, séparés par des virgules"
-            />
-            <button type="submit">Créer</button>
-        </form>
+            <div class="row mt-4">
+                <h2>Créer une nouvelle personne</h2>
+                <form
+                    method="post"
+                    th:action="@{/savePerson}"
+                    th:object="${person}"
+                >
+                    <div class="col-6">
+                        <label for="input-first-name" class="form-label"
+                            >Entrez un prénom</label
+                        ><input
+                            id="input-first-name"
+                            class="form-control"
+                            type="text"
+                            th:field="*{firstName}"
+                            placeholder="ex : Jean"
+                        />
+                    </div>
+                    <div class="col-6">
+                        <label for="input-last-name" class="form-label"
+                            >Entrez un nom</label
+                        ><input
+                            id="input-last-name"
+                            class="form-control"
+                            type="text"
+                            th:field="*{lastName}"
+                            placeholder="ex : Dupont"
+                        />
+                    </div>
+                    <div class="col-4">
+                        <label for="input-birth-date" class="form-label"
+                            >Entrez une date de naissance</label
+                        ><input
+                            id="input-birth-date"
+                            class="form-control"
+                            type="date"
+                            th:field="*{birthDate}"
+                        />
+                    </div>
+                    <div class="col-8">
+                        <label for="input-skills1" class="form-label"
+                            >Entrez des compétences</label
+                        >
+                        <div class="input-group">
+                            <input
+                                id="input-skills1"
+                                class="form-control"
+                                type="text"
+                                th:field="*{skills[0].skillName}"
+                                placeholder="Compétence 1"
+                            />
+                            <input
+                                id="input-skills2"
+                                class="form-control"
+                                type="text"
+                                th:field="*{skills[1].skillName}"
+                                placeholder="Compétence 2"
+                            />
+                            <input
+                                id="input-skills3"
+                                class="form-control"
+                                type="text"
+                                th:field="*{skills[2].skillName}"
+                                placeholder="Compétence 3"
+                            />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-4">
+                        Créer
+                    </button>
+                </form>
+            </div>
+        </div>
     </body>
 </html>

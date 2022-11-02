@@ -22,7 +22,8 @@ public class PersonService {
         return pr.getPerson(id);
     }
 
-    public Person addPerson(Person person) {
+    public Person savePerson(Person person) {
+        System.out.println("enter addperson");
         Person currentPerson;
         if (person.getId() == null) {
             currentPerson = pr.createPerson(person);
